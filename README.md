@@ -16,7 +16,7 @@ Escolhemos como alpha=0.01, b=0.0, w=1.0 e num_iterations=500. EQM final: 9.2890
 
 A etapa dois foi realizada no google colab utilizando a GPU como ambiente de execução e os seguintes conjuntos de dados:
 
-| Conjunto      | Imgs. treino   | Imgs. Teste  | Formato   |     
+| Conjunto      | Imgs. Treino   | Imgs. Teste  | Formato   |     
 |---------------|----------------|--------------|-----------|       
 | MNIST         | 60.000          | 10.000        | 28x28     |  
 | Fashion MNIST | 60.000          | 10.000        | 28x28     |  
