@@ -5,6 +5,7 @@
   <li>João Vitor Baggio  turma A</li>
   <li>Gabriel Weingartner Welter 550135 turma A</li>
 </ul>
+
 ## 1. Regressão Linear
 
 <p>
