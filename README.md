@@ -9,7 +9,7 @@
 ## 1. Regressão Linear
 
 <p>
-Escolhemos como alpha=0.01, b=0.0, w=1.0 e num_iterations=500. EQM final: 9.289090691422183 
+Escolhemos como alpha=0.01, b=0.0, w=1.0 e num_iterations=500. EQM final: 6.545
 </p>
 
 ## 2. Aprendizado Supervisionado
