@@ -106,8 +106,9 @@ def astar_hamming(estado:str)->list[str]:
             while v.pai:
                 caminho.insert(0, v.acao)
                 v = v.pai
-            print(f"Tempo decorrido: {fim - inicio:.4f} segundos")
+            print(f"Tempo decorrido hamming: {fim - inicio:.4f} segundos")
             print(f"Nós expandidos: {nos_expandidos}")
+            print(f"Custo da solução: {len(caminho)}\n")
             return caminho
 
         if v.estado not in X:
@@ -162,8 +163,9 @@ def astar_manhattan(estado:str)->list[str]:
             while v.pai:
                 caminho.insert(0, v.acao)
                 v = v.pai
-            print(f"Tempo decorrido: {fim - inicio:.4f} segundos")
+            print(f"Tempo decorrido manhattan: {fim - inicio:.4f} segundos")
             print(f"Nós expandidos: {nos_expandidos}")
+            print(f"Custo da solução: {len(caminho)}\n")
             return caminho
 
         if v.estado not in X:
