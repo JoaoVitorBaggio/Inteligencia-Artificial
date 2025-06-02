@@ -1,34 +1,27 @@
 from typing import Iterable, Set, Tuple
+from heapq import heappop,heappush
+from time import time 
+from itertools import count
 
 class Nodo:
     """
     Implemente a classe Nodo com os atributos descritos na funcao init
     """
-    def __init__(self, estado:str, pai:Nodo, acao:str, custo:int):
-        """
-        Inicializa o nodo com os atributos recebidos
-        :param estado:str, representacao do estado do 8-puzzle
-        :param pai:Nodo, referencia ao nodo pai, (None no caso do nó raiz)
-        :param acao:str, acao a partir do pai que leva a este nodo (None no caso do nó raiz)
-        :param custo:int, custo do caminho da raiz até este nó
-        """
-        # substitua a linha abaixo pelo seu codigo
-        class Nodo:
-            def __init__(self, estado: str, pai: 'Nodo', acao: str, custo: int):
-                self.estado = estado
-                self.pai = pai
-                self.acao = acao
-                self.custo = custo
+    def __init__(self, estado:str, pai, acao:str, custo:int):
+        self.estado = estado
+        self.pai = pai
+        self.acao = acao
+        self.custo = custo
 
-            def __lt__(self, other):
-                 return self.custo < other.custo
-            
-            def __eq__(self, other):
-                return isinstance(other, Nodo) and self.estado == other.estado
+    def __lt__(self, other):
+            return self.custo < other.custo
+    
+    def __eq__(self, other):
+        return isinstance(other, Nodo) and self.estado == other.estado
 
-            def __hash__(self):
-                return hash(self.estado)
-        raise NotImplementedError
+    def __hash__(self):
+        return hash(self.estado)
+        
 
 
 def sucessor(estado:str)->Set[Tuple[str,str]]:
@@ -39,14 +32,14 @@ def sucessor(estado:str)->Set[Tuple[str,str]]:
     :param estado:
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
+    
     acoes_possiveis = []
     idx = estado.index("_")
     linha, coluna = divmod(idx, 3)
 
     movimentos = {
-        "cima": (-1, 0),
-        "baixo": (1, 0),
+        "acima": (-1, 0),
+        "abaixo": (1, 0),
         "esquerda": (0, -1),
         "direita": (0, 1)
     }
@@ -71,15 +64,13 @@ def expande(nodo:Nodo)->Set[Nodo]:
     :param nodo: objeto da classe Nodo
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
+    
     filhos = []
     for acao, novo_estado in sorted(sucessor(nodo.estado)):
         filho = Nodo(estado=novo_estado, pai=nodo, acao=acao, custo=nodo.custo + 1)
-    filhos.append(filho)
+        filhos.append(filho)
     return filhos
-    raise NotImplementedError
-
-
+    
 def astar_hamming(estado:str)->list[str]:
     """
     Recebe um estado (string), executa a busca A* com h(n) = soma das distâncias de Hamming e
@@ -89,11 +80,57 @@ def astar_hamming(estado:str)->list[str]:
     :param estado: str
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
+    objetivo = "12345678_"
+    inicio = time()
+    contador = count()
+
     
+    F = []
+    nodo_inicial = Nodo(estado, None, None, 0)
+    f_inicial = hamming_distance(estado, objetivo)
+    heappush(F, (f_inicial, next(contador), nodo_inicial))
 
-    raise NotImplementedError
+    
+    X = set()             
+    g = {estado: 0}       
+    caminho_para = {estado: nodo_inicial}  
 
+    nos_expandidos = 0
+
+    while F:
+        _, _, v = heappop(F)
+
+        if v.estado == objetivo:
+            fim = time()
+            caminho = []
+            while v.pai:
+                caminho.insert(0, v.acao)
+                v = v.pai
+            print(f"Tempo decorrido: {fim - inicio:.4f} segundos")
+            print(f"Nós expandidos: {nos_expandidos}")
+            return caminho
+
+        if v.estado not in X:
+            X.add(v.estado)
+            nos_expandidos += 1
+
+            for filho in expande(v):
+                g_novo = v.custo + 1
+                if filho.estado not in g or g_novo < g[filho.estado]:
+                    g[filho.estado] = g_novo
+                    f = g_novo + hamming_distance(filho.estado, objetivo)
+                    heappush(F, (f, next(contador), filho))
+                    caminho_para[filho.estado] = filho
+
+    return None
+
+def hamming_distance(string1, string2): 
+    distance = 0
+    L = len(string1)
+    for i in range(L):
+        if string1[i] != string2[i] and string1[i] != "_":
+            distance += 1
+    return distance
 
 def astar_manhattan(estado:str)->list[str]:
     """
@@ -104,9 +141,57 @@ def astar_manhattan(estado:str)->list[str]:
     :param estado: str
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
+    objetivo = "12345678_"
+    inicio = time()
+    contador = count()
+
+    F = []
+    heappush(F, (manhattan_distance(estado, objetivo), next(contador), Nodo(estado, None, None, 0)))
+
+    X = set() 
+    g = {estado: 0} 
+
+    nos_expandidos = 0
+
+    while F:
+        _, _, v = heappop(F)
+
+        if v.estado == objetivo:
+            fim = time()
+            caminho = []
+            while v.pai:
+                caminho.insert(0, v.acao)
+                v = v.pai
+            print(f"Tempo decorrido: {fim - inicio:.4f} segundos")
+            print(f"Nós expandidos: {nos_expandidos}")
+            return caminho
+
+        if v.estado not in X:
+            X.add(v.estado)
+            nos_expandidos += 1
+
+            for filho in expande(v):
+                g_novo = v.custo + 1
+                if filho.estado not in g or g_novo < g[filho.estado]:
+                    g[filho.estado] = g_novo
+                    f = g_novo + manhattan_distance(filho.estado, objetivo)
+                    heappush(F, (f, next(contador), filho))
+
+    return None
+
+def manhattan_distance(string1, string2, grid_size = 3): 
+    distance = 0
+    L = len(string1)
+    for i in range(L):
+        char = string1[i]
+        if char != '_':
+            matching_pos = string2.index(char)
+            x1,y1 = divmod(i, grid_size)
+            x2,y2 = divmod(matching_pos, grid_size)
+            distance += abs(x1 - x2) + abs(y1 - y2)
+    return distance
+
     
-    raise NotImplementedError
 
 
 #opcional,extra
