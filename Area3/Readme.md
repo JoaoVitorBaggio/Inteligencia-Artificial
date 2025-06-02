@@ -6,6 +6,7 @@
 
   <p>
     A* Hamming: 0.0643 segundos, 13506 nós expandidos e 23 de custo para solução
+    <br>
     A* Manhattan: 0.0130 segundos, 1803 nós expandidos e 23 de custo para solução
   <p>
 
