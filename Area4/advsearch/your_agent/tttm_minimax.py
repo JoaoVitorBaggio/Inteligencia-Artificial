@@ -7,9 +7,11 @@ def make_move(state: GameState) -> Tuple[int, int]:
 
 def utility(state, player: str) -> float:
     if state.is_terminal():
-        if state.winner() == player:
+        winner = state.winner()
+        opponent = 'B' if player == 'W' else 'W'
+        if winner == player:
             return 1
-        elif state.winner() == state.opponent():
+        elif winner == opponent:
             return -1
         else:
             return 0
